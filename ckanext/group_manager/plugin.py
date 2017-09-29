@@ -17,10 +17,8 @@ class GroupManagerPlugin(plugins.SingletonPlugin):
 
     def after_map(self, map):
         #GroupManager
-        with open("/tmp/python.log", "a") as mylog:
-            mylog.write("\n%s\n" % "HERE")
         map.connect(
-            '/group/{group_name}/tag',
+            '/group/{id}/tag',
             controller='ckanext.group_manager.controller:GroupManager',
             action='index'
         )
