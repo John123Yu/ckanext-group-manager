@@ -7,6 +7,8 @@ import ckan.model as model
 import ckan.lib.helpers as h
 import ckan.new_authz as new_authz
 import ckan.logic as logic
+import ckan.lib.search as search
+import ckan.lib.maintain as maintain
 import ckan.lib.plugins
 from ckan.common import OrderedDict, c, g, request, _
 import ckan.plugins as plugins
@@ -54,7 +56,7 @@ class GroupManager(BaseController):
         return lookup_group_plugin(group_type).\
             setup_template_variables(context, data_dict)
 
-    def index(self, id):
+    def index(self, id, limit=20):
         group_type = self._get_group_type(id.split('@')[0])
         if group_type != self.group_type:
             abort(404, _('Incorrect group type'))
