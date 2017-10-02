@@ -50,11 +50,17 @@ class GroupManager(BaseController):
             kw['controller'] = 'organization'
         return h.url_for(*args, **kw)
 
+    def _setup_template_variables(self, context, data_dict, group_type=None):
+        return lookup_group_plugin(group_type).\
+            setup_template_variables(context, data_dict)
+
     def index(self, id):
         group_type = self._get_group_type(id.split('@')[0])
         if group_type != self.group_type:
             abort(404, _('Incorrect group type'))
 
+        with open("/tmp/python.log", "a") as mylog:
+            mylog.write("\n%s\n" % "HEEELLLOOO")
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
                    'schema': self._db_to_form_schema(group_type=group_type),
