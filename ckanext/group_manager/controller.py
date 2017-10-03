@@ -2,7 +2,7 @@ import collections
 import logging
 from urllib import urlencode
 
-from ckan.lib.base import (BaseController, c, g, render, request, response, abort)
+from ckan.lib.base import (BaseController, c, g, render, request, response, redirect, abort)
 import ckan.model as model
 import ckan.lib.helpers as h
 import ckan.new_authz as new_authz
@@ -56,13 +56,11 @@ class GroupManager(BaseController):
         return lookup_group_plugin(group_type).\
             setup_template_variables(context, data_dict)
 
-    def index(self, id, limit=20):
+    def index(self, id, limit=50):
         group_type = self._get_group_type(id.split('@')[0])
         if group_type != self.group_type:
             abort(404, _('Incorrect group type'))
 
-        with open("/tmp/python.log", "a") as mylog:
-            mylog.write("\n%s\n" % "HEEELLLOOO")
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
                    'schema': self._db_to_form_schema(group_type=group_type),
@@ -95,11 +93,6 @@ class GroupManager(BaseController):
                    'for_view': True, 'extras_as_string': True}
 
         q = c.q = request.params.get('q', '')
-        # Search within group
-        if c.group_dict.get('is_organization'):
-            q += ' owner_org:"%s"' % c.group_dict.get('id')
-        else:
-            q += ' groups:"%s"' % c.group_dict.get('name')
 
         c.description_formatted = h.render_markdown(c.group_dict.get('description'))
 
@@ -114,8 +107,6 @@ class GroupManager(BaseController):
         # most search operations should reset the page counter:
         params_nopage = [(k, v) for k, v in request.params.items()
                          if k != 'page']
-        with open("/tmp/python.log", "a") as mylog:
-            mylog.write("\nparams nopage: %s\n" % params_nopage)
 
         sort_by = request.params.get('sort', None)
 
@@ -130,14 +121,14 @@ class GroupManager(BaseController):
                                         action='read',
                                         id=id)
             else:
-                url = self._url_for(controller='group', action='read', id=id)
+                url = self._url_for(controller='ckanext.group_manager.controller:GroupManager', action='index', id=id)
             params = [(k, v.encode('utf-8') if isinstance(v, basestring)
                        else str(v)) for k, v in params]
             return url + u'?' + urlencode(params)
 
         def drill_down_url(**by):
             return h.add_url_param(alternative_url=None,
-                                   controller='group', action='read',
+                                   controller='ckanext.group_manager.controller:GroupManager', action='index',
                                    extras=dict(id=c.group_dict.get('name')),
                                    new_params=by)
 
@@ -145,7 +136,7 @@ class GroupManager(BaseController):
 
         def remove_field(key, value=None, replace=None):
             return h.remove_url_param(key, value=value, replace=replace,
-                                      controller='group', action='read',
+                                      controller='ckanext.group_manager.controller:GroupManager', action='index',
                                       extras=dict(id=c.group_dict.get('name')))
 
         c.remove_field = remove_field
@@ -172,13 +163,7 @@ class GroupManager(BaseController):
                     else:
                         search_extras[param] = value
 
-            fq = 'capacity:"public"'
-            user_member_of_orgs = [org['id'] for org
-                                   in h.organizations_available('read')]
-
-            if (c.group and c.group.id in user_member_of_orgs):
-                fq = ''
-                context['ignore_capacity_check'] = True
+            fq = ''
 
             facets = OrderedDict()
 
@@ -253,3 +238,7 @@ class GroupManager(BaseController):
 
         self._setup_template_variables(context, {'id':id},
             group_type=group_type)
+
+    def tagPackage(self, group_id, package_id):
+        redirect(h.url_for(controller='ckanext.group_manager.controller:GroupManager',
+                                   action='index', id=group_id))

@@ -22,4 +22,9 @@ class GroupManagerPlugin(plugins.SingletonPlugin):
             controller='ckanext.group_manager.controller:GroupManager',
             action='index'
         )
+        map.connect(
+            '/group/tag/{group_id}/{package_id}',
+            controller='ckanext.group_manager.controller:GroupManager',
+            action='tagPackage'
+        )
         return map 
