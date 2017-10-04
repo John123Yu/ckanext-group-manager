@@ -272,12 +272,6 @@ class GroupManager(BaseController):
         # unicode format (decoded from utf8)
         q = c.q = request.params.get('q', '')
 
-        # Search within group
-        if c.group_dict.get('is_organization'):
-            q += ' owner_org:"%s"' % c.group_dict.get('id')
-        else:
-            q += ' groups:"%s"' % c.group_dict.get('name')
-
         try:
             # Do not query for the group datasets when dictizing, as they will
             # be ignored and get requested on the controller anyway
@@ -300,6 +294,12 @@ class GroupManager(BaseController):
                    'for_view': True, 'extras_as_string': True}
 
         q = c.q = request.params.get('q', '')
+
+        # Search within group
+        if c.group_dict.get('is_organization'):
+            q += ' owner_org:"%s"' % c.group_dict.get('id')
+        else:
+            q += ' groups:"%s"' % c.group_dict.get('name')
 
         c.description_formatted = h.render_markdown(c.group_dict.get('description'))
 
