@@ -30,8 +30,16 @@ Example:
     <span class="label label-important">{{ _('Deleted') }}</span>
   {% endif %}
 </td>
+{% if tag %}
 <td style="text-align: center; width: 25%;">
   <form action="/group/tag/{{ c.group.id }}/{{ package.id }}" method="post">
     <button class="btn btn-success">Tag Dataset</button>
   </form>
 </td>
+{% else %}
+<td style="text-align: center; width: 25%;">
+  <form action="/group/untag/{{ c.group.id }}/{{ package.id }}" method="post">
+    <button class="btn btn-success">Remove Tag</button>
+  </form>
+</td>
+{% endif %}

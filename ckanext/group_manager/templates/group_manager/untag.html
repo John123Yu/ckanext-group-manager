@@ -21,7 +21,7 @@
     {% endblock %}
     {% block packages_list %}
         {% if c.page.items %}
-        {{ h.snippet('snippets/group_manager_package_list.html', packages=c.page.items) }}
+        {{ h.snippet('snippets/group_manager_package_list.html', packages=c.page.items, tag=False ) }}
         {% endif %}
     {% endblock %}
     {% block page_pagination %}

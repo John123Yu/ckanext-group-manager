@@ -453,11 +453,10 @@ class GroupManager(BaseController):
         try:
             data_dict = {'id': group_id,
                          'object': package_id,
-                         'object_type': 'package',
-                         'capacity': 'public'}
-            c.tagged_package = self._action('member_create')(context, data_dict)
+                         'object_type': 'package'}
+            c.tagged_package = self._action('member_delete')(context, data_dict)
         except NotAuthorized:
-            abort(401, _('Unauthorized to add member to group %s') % '')
+            abort(401, _('Unauthorized to delete member to group %s') % '')
         except NotFound:
             abort(404, _('Group not found'))
         except ValidationError, e:
