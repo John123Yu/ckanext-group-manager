@@ -93,6 +93,8 @@ class GroupManager(BaseController):
 
         q = c.q = request.params.get('q', '')
 
+        q += ' -groups:"%s"' % c.group_dict.get('name')
+
         c.description_formatted = h.render_markdown(c.group_dict.get('description'))
 
         context['return_query'] = True
@@ -256,7 +258,7 @@ class GroupManager(BaseController):
             h.flash_error(e.error_summary)
         redirect(h.url_for(controller='ckanext.group_manager.controller:GroupManager', action='tag', id=group_id ))
 
-        def untag(self, id, limit=50):
+    def untag(self, id, limit=50):
         group_type = self._get_group_type(id.split('@')[0])
         if group_type != self.group_type:
             abort(404, _('Incorrect group type'))
@@ -269,6 +271,12 @@ class GroupManager(BaseController):
 
         # unicode format (decoded from utf8)
         q = c.q = request.params.get('q', '')
+
+        # Search within group
+        if c.group_dict.get('is_organization'):
+            q += ' owner_org:"%s"' % c.group_dict.get('id')
+        else:
+            q += ' groups:"%s"' % c.group_dict.get('name')
 
         try:
             # Do not query for the group datasets when dictizing, as they will
