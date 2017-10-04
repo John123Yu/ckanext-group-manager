@@ -56,7 +56,14 @@ class GroupManager(BaseController):
         return lookup_group_plugin(group_type).\
             setup_template_variables(context, data_dict)
 
-    def index(self, id, limit=50):
+    def tag(self, id, tag=10, limit=50):
+        with open("/tmp/python.log", "a") as mylog:
+            mylog.write("\ntag: %s\n" % "HERE")
+        if tag == 10:
+            tag = id.split(" - ")[1]
+
+        with open("/tmp/python.log", "a") as mylog:
+            mylog.write("\ntag: %s\n" % tag)
         group_type = self._get_group_type(id.split('@')[0])
         if group_type != self.group_type:
             abort(404, _('Incorrect group type'))
@@ -80,10 +87,15 @@ class GroupManager(BaseController):
             abort(404, _('Group not found'))
         except NotAuthorized:
             abort(401, _('Unauthorized to read group %s') % id)
-        self._read(id, limit)
-        return render('group_manager/index.html')
 
-    def _read(self, id, limit):
+        self._tag(id, tag, limit)
+
+        if tag == 'tag':
+            return render('group_manager/tag.html')
+        elif tag == 'untag':
+            return render('group_manager/untag.html')
+
+    def _tag(self, id, tag, limit):
         ''' This is common code used by both read and bulk_process'''
         group_type = self._get_group_type(id.split('@')[0])
         context = {'model': model, 'session': model.Session,
@@ -120,14 +132,14 @@ class GroupManager(BaseController):
                                         action='read',
                                         id=id)
             else:
-                url = self._url_for(controller='ckanext.group_manager.controller:GroupManager', action='index', id=id)
+                url = self._url_for(controller='ckanext.group_manager.controller:GroupManager', action='tag', id=id)
             params = [(k, v.encode('utf-8') if isinstance(v, basestring)
                        else str(v)) for k, v in params]
             return url + u'?' + urlencode(params)
 
         def drill_down_url(**by):
             return h.add_url_param(alternative_url=None,
-                                   controller='ckanext.group_manager.controller:GroupManager', action='index',
+                                   controller='ckanext.group_manager.controller:GroupManager', action='tag',
                                    extras=dict(id=c.group_dict.get('name')),
                                    new_params=by)
 
@@ -135,7 +147,7 @@ class GroupManager(BaseController):
 
         def remove_field(key, value=None, replace=None):
             return h.remove_url_param(key, value=value, replace=replace,
-                                      controller='ckanext.group_manager.controller:GroupManager', action='index',
+                                      controller='ckanext.group_manager.controller:GroupManager', action='tag',
                                       extras=dict(id=c.group_dict.get('name')))
 
         c.remove_field = remove_field
@@ -254,4 +266,6 @@ class GroupManager(BaseController):
             abort(404, _('Group not found'))
         except ValidationError, e:
             h.flash_error(e.error_summary)
-        redirect(h.url_for(controller='ckanext.group_manager.controller:GroupManager', action='index', id=group_id ))
+
+        group_id += " - tag"
+        redirect(h.url_for(controller='ckanext.group_manager.controller:GroupManager', action='tag', id=group_id ))
