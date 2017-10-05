@@ -1,6 +1,7 @@
 {% extends "group/read_base.html" %}
 
 {% block primary_content_inner %}
+    {% resource 'group-manager/css/group_manager.css' %}
     {{ super() }}
     {% block groups_search_form %}
     {% set facets = {

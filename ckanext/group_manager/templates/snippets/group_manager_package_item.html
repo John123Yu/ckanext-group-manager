@@ -31,15 +31,15 @@ Example:
   {% endif %}
 </td>
 {% if tag %}
-<td style="text-align: center; width: 25%;">
+<td class="package_td">
   <form action="/group/tag/{{ c.group.id }}/{{ package.id }}" method="post">
-    <button class="btn btn-success">Tag Dataset</button>
+    <button class="btn btn-success tag_button">Tag Dataset</button>
   </form>
 </td>
 {% else %}
-<td style="text-align: center; width: 25%;">
+<td class="package_td">
   <form action="/group/untag/{{ c.group.id }}/{{ package.id }}" method="post">
-    <button class="btn btn-success">Remove Tag</button>
+    <button class="btn btn-success tag_button">Remove Tag</button>
   </form>
 </td>
 {% endif %}
