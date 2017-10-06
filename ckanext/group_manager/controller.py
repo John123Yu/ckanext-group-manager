@@ -251,6 +251,8 @@ class GroupManager(BaseController):
                          'object': package_id,
                          'object_type': 'package',
                          'capacity': 'public'}
+            c.group_dict = self._action('group_show')(context, data_dict)
+            c.group = context['group']
             c.tagged_package = self._action('member_create')(context, data_dict)
         except NotAuthorized:
             abort(401, _('Unauthorized to add member to group %s') % '')
@@ -259,7 +261,7 @@ class GroupManager(BaseController):
         except ValidationError, e:
             h.flash_error(e.error_summary)
 
-        redirect(h.url_for(controller='ckanext.group_manager.controller:GroupManager', action='tag', id=group_id ))
+        redirect(h.url_for(controller='ckanext.group_manager.controller:GroupManager', action='tag', id=c.group.name ))
 
     def untag(self, id, limit=50):
         group_type = self._get_group_type(id.split('@')[0])
@@ -457,6 +459,8 @@ class GroupManager(BaseController):
             data_dict = {'id': group_id,
                          'object': package_id,
                          'object_type': 'package'}
+            c.group_dict = self._action('group_show')(context, data_dict)
+            c.group = context['group']
             c.tagged_package = self._action('member_delete')(context, data_dict)
         except NotAuthorized:
             abort(401, _('Unauthorized to delete member to group %s') % '')
@@ -464,4 +468,5 @@ class GroupManager(BaseController):
             abort(404, _('Group not found'))
         except ValidationError, e:
             h.flash_error(e.error_summary)
-        redirect(h.url_for(controller='ckanext.group_manager.controller:GroupManager', action='untag', id=group_id ))
+
+        redirect(h.url_for(controller='ckanext.group_manager.controller:GroupManager', action='untag', id=c.group.name ))
