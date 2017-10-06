@@ -31,7 +31,22 @@
 {% endblock %}
 
 {% block secondary_content %}
-    {{ super() }}
+    <div class="module context-info">
+    <section class="module-content">
+      <div class="image">
+        <a href="{{ c.group_dict.url }}">
+          <img src="{{ c.group_dict.image_url or h.url_for_static('/base/images/placeholder-group.png') }}" width="190" height="118" alt="{{ c.group_dict.name }}" />
+        </a>
+      </div>
+      <h1 class="heading">{{ c.group_dict.display_name }}</h1>
+      {% if c.group_dict.description %}
+        <p>
+          {{ h.markdown_extract(c.group_dict.description, 180) }}
+          {% link_for _('read more'), controller='group', action='about', id=c.group_dict.name %}
+        </p>
+      {% endif %}
+    </section>
+  </div>
     <div class="filters">
         <div>
         {% for facet in c.facet_titles %}
