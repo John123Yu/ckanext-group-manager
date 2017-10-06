@@ -56,6 +56,7 @@ class GroupManager(BaseController):
         return lookup_group_plugin(group_type).\
             setup_template_variables(context, data_dict)
 
+
     def tag(self, id, limit=50):
         group_type = self._get_group_type(id.split('@')[0])
         if group_type != self.group_type:
@@ -80,6 +81,7 @@ class GroupManager(BaseController):
             abort(404, _('Group not found'))
         except NotAuthorized:
             abort(401, _('Unauthorized to read group %s') % id)
+
         self._tag(id, limit)
         return render('group_manager/tag.html')
 
@@ -256,6 +258,7 @@ class GroupManager(BaseController):
             abort(404, _('Group not found'))
         except ValidationError, e:
             h.flash_error(e.error_summary)
+
         redirect(h.url_for(controller='ckanext.group_manager.controller:GroupManager', action='tag', id=group_id ))
 
     def untag(self, id, limit=50):
