@@ -1,0 +1,19 @@
+.table td {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  vertical-align: middle !important;
+}
+
+.package_td {
+  width: 25%;
+}
+ 
+.package_td form {
+  text-align: center;
+  vertical-align: middle;
+  margin: 0px;
+}
+
+.tag_button {
+ margin: 5px;
+}

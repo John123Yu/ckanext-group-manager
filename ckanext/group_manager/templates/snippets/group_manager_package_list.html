@@ -20,7 +20,7 @@ Example:
     <tbody>
       {% for package in packages %}
       <tr class="{{ list_class or 'dataset-list unstyled' }}">
-        {% snippet 'snippets/group_manager_package_item.html', package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_organization=show_organization %}
+        {% snippet 'snippets/group_manager_package_item.html', package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_organization=show_organization, tag=tag %}
       </tr>
       {% endfor %}
     </tbody>
