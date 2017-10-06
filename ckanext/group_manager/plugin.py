@@ -18,7 +18,7 @@ class GroupManagerPlugin(plugins.SingletonPlugin):
     def after_map(self, map):
         #GroupManager
         map.connect(
-            '/group/{id}/{tag}',
+            '/group/{id}/tag',
             controller='ckanext.group_manager.controller:GroupManager',
             action='tag'
         )
