@@ -32,9 +32,7 @@ Example:
 </td>
 {% if tag %}
 <td class="package_td">
-  <form action="/group/tag/{{ c.group.id }}/{{ package.id }}" method="post">
-    <button class="btn btn-success tag_button">Tag Dataset</button>
-  </form>
+    <input type="checkbox" onSelect="tagDataset( {{ package.id }} )">
 </td>
 {% else %}
 <td class="package_td">
