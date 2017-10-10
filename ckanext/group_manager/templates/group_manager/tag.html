@@ -1,6 +1,10 @@
 {% extends "group/read_base.html" %}
 
 {% block primary_content_inner %}
+    <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
     {% resource 'group-manager/css/group_manager.css' %}
     {{ super() }}
     {% block groups_search_form %}
@@ -21,11 +25,24 @@
     {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, placeholder=_('Search datasets...'), show_empty=request.params, fields=c.fields %}
     {% endblock %}
     {% block packages_list %}
+    <form action="/group/tag_many">
     <button onclick="tagAll()">Tag Datasets</button>
+    </form>
     <script type="text/javascript">
       var tag_array = [];
       function tagAll() {
         console.log(tag_array);
+        $.ajax({
+            type: "POST",
+            url: form.attr('action'),
+            data: {
+                group_id: "{{ c.group.id }}",
+                package_id: tag_array
+            },
+            success: function() {
+                console.log("HEYO");
+	    }
+        });
       }
       function tagDataset(dataset) {
           var indexOf = tag_array.indexOf(dataset);

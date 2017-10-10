@@ -28,6 +28,11 @@ class GroupManagerPlugin(plugins.SingletonPlugin):
             action='tagPackage'
         )
         map.connect(
+            '/group/tag_many',
+            controller='ckanext.group_manager.controller:GroupManager',
+            action='tagManyPackages'
+        )
+        map.connect(
             '/group/{id}/untag',
             controller='ckanext.group_manager.controller:GroupManager',
             action='untag'

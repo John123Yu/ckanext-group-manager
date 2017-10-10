@@ -263,6 +263,15 @@ class GroupManager(BaseController):
 
         redirect(h.url_for(controller='ckanext.group_manager.controller:GroupManager', action='tag', id=c.group.name ))
 
+    def tagManyPackages(self, group_id, package_id):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author }
+        with open("/tmp/python.log", "a") as mylog:
+            mylog.write("\nGroup_id%s\n" % group_id)
+        with open("/tmp/python.log", "a") as mylog:
+            mylog.write("\nPackage_id: %s\n" % package_id)
+        redirect(h.url_for(controller='ckanext.group_manager.controller:GroupManager', action='tag', id="disasters" ))
+
     def untag(self, id, limit=50):
         group_type = self._get_group_type(id.split('@')[0])
         if group_type != self.group_type:
