@@ -32,7 +32,7 @@ Example:
 </td>
 {% if tag %}
 <td class="package_td">
-    <input type="checkbox" onSelect="tagDataset( {{ package.id }} )">
+    <input type="checkbox" onclick="tagDataset('{{ package.id }}')">
 </td>
 {% else %}
 <td class="package_td">
